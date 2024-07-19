@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jemput Kendaraan</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <style>
+        .sticky {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .hidden-menu {
+            display: none;
+        }
+        .block-menu {
+            display: block;
+        }
+        #mapid {
+            height: 400px; /* Sesuaikan tinggi peta di sini */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-white backdrop-blur-lg shadow-md sticky">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold text-gray-800">Layanan Jasa</a>
+            <div class="hidden md:flex space-x-4">
+                <a href="#jemput-form" class="text-gray-800 hover:text-blue-600">Jemput Kendaraan</a>
+                <a href="#confirmation" class="text-gray-800 hover:text-blue-600">Konfirmasi Pesanan</a>
+                <a href="#footer" class="text-gray-800 hover:text-blue-600">Footer</a>
+            </div>
+            <button id="menu-btn" class="md:hidden text-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden-menu md:hidden bg-white shadow-md">
+            <a href="#jemput-form" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Jemput Kendaraan</a>
+            <a href="#confirmation" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Konfirmasi Pesanan</a>
+            <a href="#footer" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Footer</a>
+        </div>
+    </nav>
+
+    <!-- Jemput Kendaraan Section -->
+    <section id="jemput-form" class="pt-24 pb-16">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl font-bold text-center mb-8">Jemput Kendaraan</h1>
+            <form id="jemput-form" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
+                <div class="mb-4">
+                    <label for="nama" class="block text-gray-700 font-bold mb-2">Nama:</label>
+                    <input type="text" id="nama" name="nama" class="w-full p-2 border border-gray-300 rounded-lg" required>
+                </div>
+                <div class="mb-4">
+                    <label for="telepon" class="block text-gray-700 font-bold mb-2">Nomor Telepon:</label>
+                    <input type="text" id="telepon" name="telepon" class="w-full p-2 border border-gray-300 rounded-lg" required>
+                </div>
+                <div id="mapid" class="mb-4"></div> <!-- Kontainer untuk peta -->
+                <div class="mb-4">
+                    <label for="alamat_jemput" class="block text-gray-700 font-bold mb-2">Alamat Jemput:</label>
+                    <input type="text" id="alamat_jemput" name="alamat_jemput" class="w-full p-2 border border-gray-300 rounded-lg" required>
+                    <p id="displayed_address_jemput" class="mt-2 text-gray-600"></p> <!-- Menampilkan alamat -->
+                </div>
+                <div class="mb-4">
+                    <label for="alamat_antar" class="block text-gray-700 font-bold mb-2">Alamat Antar:</label>
+                    <input type="text" id="alamat_antar" name="alamat_antar" class="w-full p-2 border border-gray-300 rounded-lg" required>
+                    <p id="displayed_address_antar" class="mt-2 text-gray-600"></p> <!-- Menampilkan alamat -->
+                    <div id="distance" class="mt-4 text-gray-700 font-bold text-center"></div> <!-- Menampilkan jarak -->
+                    <div id="total-price" class="mt-4 text-gray-700 font-bold text-center"></div> <!-- Menampilkan total harga -->
+                    <div id="total-price" class="mt-4 text-gray-700 font-bold text-center"></div> <!-- Menampilkan total harga -->
+                </div>
+                <div class="mb-4">
+                    <label for="kendaraan" class="block text-gray-700 font-bold mb-2">Jenis Kendaraan:</label>
+                    <select id="kendaraan" name="kendaraan" class="w-full p-2 border border-gray-300 rounded-lg" required>
+                        <option value="motor">Motor</option>
+                        <option value="mobil">Mobil</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="pembayaran" class="block text-gray-700 font-bold mb-2">Metode Pembayaran:</label>
+                    <select id="pembayaran" name="pembayaran" class="w-full p-2 border border-gray-300 rounded-lg" required>
+                        <option value="cod">Cash on Delivery (COD)</option>
+                        <option value="ewallet">E-Wallet</option>
+                    </select>
+                </div>
+                <div id="qris-container" class="hidden mb-4">
+                    <label class="block text-gray-700 font-bold mb-2">Scan QRIS untuk pembayaran:</label>
+                    <img src="img/layanan.png" alt="QRIS" class="w-full max-w-xs mx-auto">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-full">Pesan Sekarang</button>
+                    <button type="button" id="reset-location" class="bg-red-600 text-white font-bold py-2 px-4 rounded-full ml-4">Reset Lokasi</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Konfirmasi Pesanan Section -->
+    <section id="confirmation" class="hidden pt-24 pb-16">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl font-bold text-center mb-8">Konfirmasi Pesanan Anda</h1>
+            <div id="order-details" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg text-center">
+                <!-- Detail Pesanan akan ditampilkan di sini -->
+            </div>
+            <div class="text-center mt-8">
+                <button id="pay-now" class="bg-green-600 text-white font-bold py-2 px-4 rounded-full">Bayar Sekarang</button>
+                <button id="contact-driver" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-full">Hubungi Pengemudi</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="bg-white text-gray-800 text-center py-6">
+        <div class="container mx-auto px-6">
+            <p class="text-sm">© 2024 Layanan Jasa Kami. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS dan Script untuk Inisialisasi Peta -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script>
+        // Inisialisasi peta
+        var map = L.map('mapid').setView([-6.2088, 106.8456], 13);
+
+        // Tambahkan peta dari OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Icon untuk marker jemput
+        var jemputIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        // Icon untuk marker antar
+        var antarIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        // Variable untuk routingControl dan markers
+        var routingControl;
+        var markerJemput, markerAntar;
+
+        // Inisialisasi marker jemput
+        map.on('click', function(e) {
+            if (!markerJemput) {
+                markerJemput = L.marker(e.latlng, { icon: jemputIcon }).addTo(map)
+                    .bindPopup('<b>Lokasi Jemput</b>').openPopup();
+
+                // Ambil alamat dari koordinat yang dipilih
+                getAddress(e.latlng, 'jemput');
+            } else if (!markerAntar) {
+                markerAntar = L.marker(e.latlng, { icon: antarIcon }).addTo(map)
+                    .bindPopup('<b>Lokasi Antar</b>').openPopup();
+
+                // Ambil alamat dari koordinat yang dipilih
+                getAddress(e.latlng, 'antar');
+
+                // Tambahkan rute dan hitung jarak
+                if (!routingControl) {
+                    routingControl = L.Routing.control({
+                        waypoints: [
+                            L.latLng(markerJemput.getLatLng()),
+                            L.latLng(e.latlng)
+                        ],
+                        router: L.Routing.osrmv1({
+                            serviceUrl: 'https://router.project-osrm.org/route/v1'
+                        }),
+                        createMarker: function() { return null; } // Menghilangkan marker pada rute
+                    }).addTo(map);
+
+                    // Tambahkan event listener untuk mendapatkan jarak rute
+                    routingControl.on('routesfound', function(e) {
+                        var route = e.routes[0];
+                        var distance = route.summary.totalDistance / 1000; // Jarak dalam kilometer
+                        document.getElementById('distance').innerText = `Jarak: ${distance.toFixed(2)} km`;
+                    });
+                } else {
+                    // Perbarui rute dengan lokasi baru
+                    routingControl.setWaypoints([
+                        L.latLng(markerJemput.getLatLng()),
+                        L.latLng(e.latlng)
+                    ]);
+                }
+            } else {
+                alert('Anda sudah menetapkan lokasi jemput dan antar. Tekan tombol Reset Lokasi untuk mengubahnya.');
+            }
+        });
+        
+        // Menambahkan fungsi untuk menghitung dan menampilkan total harga
+        function updateTotalPrice() {
+            var vehicleType = document.getElementById('kendaraan').value;
+            var distanceElement = document.getElementById('distance').innerText;
+            var distance = parseFloat(distanceElement.replace('Jarak: ', '').replace(' km', ''));
+            var pricePerKm = vehicleType === 'motor' ? 2500 : 10000; // Contoh harga per km
+            var totalPrice = distance * pricePerKm;
+            document.getElementById('total-price').innerText = `Total Harga: Rp${totalPrice.toLocaleString()}`;
+        }
+
+        // Update total harga setiap kali jarak diperbarui
+        document.getElementById('distance').addEventListener('DOMSubtreeModified', function() {
+            updateTotalPrice();
+        });
+
+        // Fungsi untuk mendapatkan alamat dari koordinat
+        function getAddress(latlng, type) {
+            var geocodeUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}&addressdetails=1`;
+            fetch(geocodeUrl)
+                .then(response => response.json())
+                .then(data => {
+                    var address = data.display_name;
+                    if (type === 'jemput') {
+                        document.getElementById('alamat_jemput').value = address;
+                        document.getElementById('displayed_address_jemput').innerText = address;
+                    } else if (type === 'antar') {
+                        document.getElementById('alamat_antar').value = address;
+                        document.getElementById('displayed_address_antar').innerText = address;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Menampilkan QRIS jika E-Wallet dipilih
+        document.getElementById('pembayaran').addEventListener('change', function() {
+            var qrisContainer = document.getElementById('qris-container');
+            if (this.value === 'ewallet') {
+                qrisContainer.classList.remove('hidden');
+            } else {
+                qrisContainer.classList.add('hidden');
+            }
+        });
+
+        // Mengatur ulang lokasi
+        document.getElementById('reset-location').addEventListener('click', function() {
+            if (markerJemput) {
+                map.removeLayer(markerJemput);
+                markerJemput = null;
+            }
+            if (markerAntar) {
+                map.removeLayer(markerAntar);
+                markerAntar = null;
+            }
+            if (routingControl) {
+                map.removeControl(routingControl);
+                routingControl = null;
+            }
+            document.getElementById('distance').innerText = '';
+        });
+
+        // Toggle menu mobile
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            var mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu.classList.contains('hidden-menu')) {
+                mobileMenu.classList.remove('hidden-menu');
+                mobileMenu.classList.add('block-menu');
+            } else {
+                mobileMenu.classList.remove('block-menu');
+                mobileMenu.classList.add('hidden-menu');
+            }
+        });
+    </script>
+</body>
+</html>

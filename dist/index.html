@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layanan Jasa</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .sticky {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .hidden-menu {
+            display: none;
+        }
+        .block-menu {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-white backdrop-blur-lg shadow-md sticky">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold text-gray-800">Layanan Jasa</a>
+            <div class="hidden md:flex space-x-4">
+                <a href="#hero" class="text-gray-800 hover:text-blue-600">Home</a>
+                <a href="#services" class="text-gray-800 hover:text-blue-600">Layanan</a>
+                <a href="#about" class="text-gray-800 hover:text-blue-600">Tentang Kami</a>
+                <a href="#contact" class="text-gray-800 hover:text-blue-600">Kontak</a>
+            </div>
+            <button id="menu-btn" class="md:hidden text-gray-800">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden-menu md:hidden bg-white shadow-md">
+            <a href="#hero" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Home</a>
+            <a href="#services" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Layanan</a>
+            <a href="#about" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Tentang Kami</a>
+            <a href="#contact" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Kontak</a>
+        </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <header id="hero" class="bg-blue-600 text-white">
+        <div class="container mx-auto px-6 py-24 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-8 md:mb-0 text-center md:text-left">
+                <h1 class="text-5xl font-bold">Layanan Jasa Terbaik</h1>
+                <p class="mt-4 text-lg">Kami menawarkan layanan antar jemput kendaraan, laundry, pembersihan rumah, cuci kendaraan, pengantaran makanan, dan pengantaran paket. Dengan keahlian profesional, kami siap membantu memenuhi kebutuhan Anda!</p>
+                <a href="#services" class="mt-8 inline-block bg-white text-blue-600 font-bold py-2 px-4 rounded-full">Lihat Layanan</a>
+            </div>
+            <div class="md:w-1/2">
+                <img src="img/layanan.png" alt="Layanan Jasa">
+            </div>
+        </div>
+    </header>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">Layanan Kami</h2>
+            <div class="grid grid-cols-2 gap-8 md:grid-cols-1 lg:grid-cols-3">
+                <!-- Service 1 -->
+                <div class="bg-blue-100 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <div class="flex items-center justify-center mb-4">
+                        <img src="motor-pickup-icon.png" alt="Jemput Kendaraan" class="w-24 h-24">
+                    </div>
+                    <h3 class="text-xl font-semibold text-center">Jemput Kendaraan</h3>
+                    <p class="text-gray-600 text-center mt-2">Layanan cepat dan aman untuk kebutuhan antar jemput Anda.</p>
+                    <a href="jemput-kendaraan.html" class="mt-4 inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded">Order Now</a>
+                </div>
+                <!-- Service 2 -->
+                <div class="bg-blue-200 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <div class="flex items-center justify-center mb-4">
+                        <img src="laundry-icon.png" alt="Cucian Bersih" class="w-24 h-24">
+                    </div>
+                    <h3 class="text-xl font-semibold text-center">Cucian Bersih</h3>
+                    <p class="text-gray-600 text-center mt-2">Cuci dan setrika pakaian Anda dengan layanan kami yang terpercaya.</p>
+                    <a href="cucian-bersih.html" class="mt-4 inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded">Order Now</a>
+                </div>
+                <!-- Service 3 -->
+                <div class="bg-blue-100 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <div class="flex items-center justify-center mb-4">
+                        <img src="cleaning-icon.png" alt="Bersih Rumah" class="w-24 h-24">
+                    </div>
+                    <h3 class="text-xl font-semibold text-center">Home Cleaning</h3>
+                    <p class="text-gray-600 text-center mt-2">Tim profesional kami siap membantu menjaga kebersihan rumah Anda.</p>
+                </div>
+                <!-- Service 4 -->
+                <div class="bg-blue-100 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <div class="flex items-center justify-center mb-4">
+                        <img src="car-wash-icon.png" alt="Cuci Kendaraan" class="w-24 h-24">
+                    </div>
+                    <h3 class="text-xl font-semibold text-center">Vehicle Wash</h3>
+                    <p class="text-gray-600 text-center mt-2">Layanan pencucian kendaraan yang membuat kendaraan Anda bersih dan berkilau.</p>
+                </div>
+                <!-- Service 5 -->
+                <div class="bg-blue-100 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <div class="flex items-center justify-center mb-4">
+                        <img src="food-delivery-icon.png" alt="Antar Makanan" class="w-24 h-24">
+                    </div>
+                    <h3 class="text-xl font-semibold text-center">Food Delivery</h3>
+                    <p class="text-gray-600 text-center mt-2">Nikmati makanan favorit Anda tanpa repot dengan layanan pengantaran kami.</p>
+                </div>
+                <!-- Service 6 -->
+                <div class="bg-blue-100 p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                    <div class="flex items-center justify-center mb-4">
+                        <img src="package-delivery-icon.png" alt="Antar Paket" class="w-24 h-24">
+                    </div>
+                    <h3 class="text-xl font-semibold text-center">Package Delivery</h3>
+                    <p class="text-gray-600 text-center mt-2">Kami memastikan paket Anda sampai tepat waktu dan aman.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-gray-200">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-6">Tentang Kami</h2>
+            <p class="text-lg">Kami adalah perusahaan yang menyediakan layanan profesional untuk berbagai kebutuhan Anda. Kepuasan Anda adalah prioritas kami.</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-6">Kontak</h2>
+            <p class="text-lg">Hubungi kami untuk informasi lebih lanjut atau untuk memesan layanan kami.</p>
+            <div class="mt-8">
+                <a href="mailto:info@layananjasa.com" class="text-blue-600 hover:underline">info@layananjasa.com</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 py-6">
+        <div class="container mx-auto px-6 text-center text-white">
+            <p>&copy; 2024 Layanan Jasa. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            if (mobileMenu.classList.contains('hidden-menu')) {
+                mobileMenu.classList.remove('hidden-menu');
+                mobileMenu.classList.add('block-menu');
+            } else {
+                mobileMenu.classList.remove('block-menu');
+                mobileMenu.classList.add('hidden-menu');
+            }
+        });
+    </script>
+</body>
+</html>
